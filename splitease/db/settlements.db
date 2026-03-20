@@ -1,0 +1,3 @@
+{"id":2,"from_user":3,"to_user":1,"amount":666.67,"note":"","settled_at":"2026-03-20T14:12:55.210Z","_id":"6oOC4FoGN4sNXP6H"}
+{"id":1,"from_user":1,"to_user":2,"amount":666.66,"note":"","settled_at":"2026-03-20T14:12:13.799Z","_id":"rx2K94OVqiN5bz0z"}
+{"id":3,"from_user":2,"to_user":1,"amount":666.66,"note":"","settled_at":"2026-03-20T14:28:43.770Z","_id":"lKstuzJeIia66KMu"}

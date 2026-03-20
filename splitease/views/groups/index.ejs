@@ -1,0 +1,36 @@
+<% const title = 'Groups'; const page = 'groups'; %>
+<%- include('../partials/header') %>
+
+<div class="page-top-bar">
+  <div></div>
+  <a href="/groups/new" class="btn-primary"><i class="fa-solid fa-plus"></i> New Group</a>
+</div>
+
+<% if (groups.length === 0) { %>
+  <div class="card">
+    <div class="empty-state">
+      <i class="fa-solid fa-people-group"></i>
+      <p>No groups yet. Create one to start splitting with your crew!</p>
+      <a href="/groups/new" class="btn-primary" style="margin-top:12px;"><i class="fa-solid fa-plus"></i> Create Group</a>
+    </div>
+  </div>
+<% } else { %>
+  <div class="groups-grid">
+    <% groups.forEach(g => { %>
+      <a href="/groups/<%= g.id %>" class="group-card">
+        <div class="group-icon"><%= g.icon %></div>
+        <div class="group-body">
+          <h3 class="group-name"><%= g.name %></h3>
+          <% if (g.description) { %><p class="group-desc"><%= g.description %></p><% } %>
+          <div class="group-meta">
+            <span><i class="fa-solid fa-users"></i> <%= g.member_count %> members</span>
+            <span><i class="fa-solid fa-receipt"></i> ₹<%= g.total_spent.toFixed(2) %> spent</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right group-arrow"></i>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

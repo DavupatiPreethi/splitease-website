@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= typeof title !== 'undefined' ? title + ' – SplitEase' : 'SplitEase' %></title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- Sidebar overlay -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+      <span class="brand-name">SplitEase</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="nav-link <%= typeof page !== 'undefined' && page==='dashboard' ? 'active' : '' %>">
+        <i class="fa-solid fa-house-chimney"></i><span>Dashboard</span>
+      </a>
+      <a href="/groups" class="nav-link <%= typeof page !== 'undefined' && page==='groups' ? 'active' : '' %>">
+        <i class="fa-solid fa-people-group"></i><span>Groups</span>
+      </a>
+      <a href="/friends" class="nav-link <%= typeof page !== 'undefined' && page==='friends' ? 'active' : '' %>">
+        <i class="fa-solid fa-user-group"></i><span>Friends</span>
+      </a>
+      <a href="/expenses" class="nav-link <%= typeof page !== 'undefined' && page==='expenses' ? 'active' : '' %>">
+        <i class="fa-solid fa-receipt"></i><span>Expenses</span>
+      </a>
+      <a href="/balances" class="nav-link <%= typeof page !== 'undefined' && page==='balances' ? 'active' : '' %>">
+        <i class="fa-solid fa-scale-balanced"></i><span>Balances</span>
+      </a>
+      <a href="/activity" class="nav-link <%= typeof page !== 'undefined' && page==='activity' ? 'active' : '' %>">
+        <i class="fa-solid fa-clock-rotate-left"></i><span>Activity</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="/settings" class="nav-link <%= typeof page !== 'undefined' && page==='settings' ? 'active' : '' %>">
+        <i class="fa-solid fa-gear"></i><span>Settings</span>
+      </a>
+      <a href="/logout" class="nav-link nav-logout">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+      </a>
+      <div class="sidebar-user">
+        <div class="user-ava"><%= user.name[0].toUpperCase() %></div>
+        <div class="user-meta">
+          <span class="user-name"><%= user.name %></span>
+          <span class="user-email"><%= user.email %></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-left">
+        <h1 class="topbar-title"><%= typeof title !== 'undefined' ? title : 'SplitEase' %></h1>
+      </div>
+      <div class="topbar-right">
+        <a href="/expenses/new" class="btn-topbar"><i class="fa-solid fa-plus"></i> Add Expense</a>
+        <div class="topbar-user">
+          <div class="user-ava sm"><%= user.name[0].toUpperCase() %></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <% if (success && success.length > 0) { %>
+      <div class="flash flash-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+      <div class="flash flash-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div>
+    <% } %>
+
+    <div class="page-body">

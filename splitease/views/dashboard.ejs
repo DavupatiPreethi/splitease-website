@@ -1,0 +1,193 @@
+<% const title = 'Dashboard'; const page = 'dashboard'; %>
+<%- include('partials/header') %>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+  <div class="stat-card stat-green">
+    <div class="stat-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">You Are Owed</span>
+      <span class="stat-value">₹<%= owedToYou.toFixed(2) %></span>
+    </div>
+  </div>
+  <div class="stat-card stat-red">
+    <div class="stat-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">You Owe</span>
+      <span class="stat-value">₹<%= youOwe.toFixed(2) %></span>
+    </div>
+  </div>
+  <div class="stat-card stat-blue">
+    <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">Total Spent</span>
+      <span class="stat-value">₹<%= totalPaid.toFixed(2) %></span>
+    </div>
+  </div>
+  <div class="stat-card stat-purple">
+    <div class="stat-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">Net Balance</span>
+      <span class="stat-value <%= netBalance >= 0 ? 'text-green' : 'text-red' %>">
+        <%= netBalance >= 0 ? '+' : '' %>₹<%= Math.abs(netBalance).toFixed(2) %>
+      </span>
+    </div>
+  </div>
+  <div class="stat-card stat-orange">
+    <div class="stat-icon"><i class="fa-solid fa-people-group"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">Groups</span>
+      <span class="stat-value"><%= groupCount %></span>
+    </div>
+  </div>
+  <div class="stat-card stat-teal">
+    <div class="stat-icon"><i class="fa-solid fa-user-group"></i></div>
+    <div class="stat-body">
+      <span class="stat-label">Friends</span>
+      <span class="stat-value"><%= friendCount %></span>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="charts-grid">
+  <div class="card chart-card">
+    <div class="card-head">
+      <h2>Monthly Spending</h2>
+      <span class="card-sub">Last 6 months</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="monthlyChart"></canvas>
+    </div>
+  </div>
+  <div class="card chart-card">
+    <div class="card-head">
+      <h2>By Category</h2>
+      <span class="card-sub">All time</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Row -->
+<div class="dash-bottom">
+  <!-- Recent Expenses -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Recent Expenses</h2>
+      <a href="/expenses" class="card-link">View all →</a>
+    </div>
+    <% if (recentExpenses.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-receipt"></i>
+        <p>No expenses yet. <a href="/expenses/new">Add one!</a></p>
+      </div>
+    <% } else { %>
+      <div class="list-items">
+        <% recentExpenses.forEach(e => { %>
+          <div class="list-item">
+            <div class="item-icon cat-icon"><%= getCatEmoji(e.category) %></div>
+            <div class="item-body">
+              <span class="item-title"><%= e.description %></span>
+              <span class="item-sub">Paid by <%= e.payer_name %> · <%= e.date %></span>
+            </div>
+            <span class="item-amount">₹<%= e.amount.toFixed(2) %></span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Who Owes Who -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Outstanding Balances</h2>
+      <a href="/balances" class="card-link">Settle up →</a>
+    </div>
+    <% if (topDebts.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-handshake"></i>
+        <p>All settled up! 🎉</p>
+      </div>
+    <% } else { %>
+      <div class="list-items">
+        <% topDebts.forEach(d => { %>
+          <div class="list-item">
+            <div class="user-ava sm"><%= d.name[0].toUpperCase() %></div>
+            <div class="item-body">
+              <span class="item-title"><%= d.name %></span>
+              <span class="item-sub <%= d.net > 0 ? 'text-green' : 'text-red' %>">
+                <%= d.net > 0 ? 'Owes you' : 'You owe' %>
+              </span>
+            </div>
+            <span class="item-amount <%= d.net > 0 ? 'text-green' : 'text-red' %>">
+              ₹<%= Math.abs(d.net).toFixed(2) %>
+            </span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+// Monthly Chart
+const monthlyData = <%- JSON.stringify(monthly) %>;
+const mLabels = monthlyData.map(m => {
+  const [y, mo] = m.month.split('-');
+  return new Date(y, mo-1).toLocaleString('default', { month: 'short', year: '2-digit' });
+});
+const mValues = monthlyData.map(m => m.total);
+
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: mLabels.length ? mLabels : ['No data'],
+    datasets: [{
+      label: 'Spending (₹)',
+      data: mValues.length ? mValues : [0],
+      backgroundColor: 'rgba(99, 102, 241, 0.8)',
+      borderRadius: 8,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => '₹'+v } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// Category Chart
+const catData = <%- JSON.stringify(categories) %>;
+const COLORS = ['#6366f1','#22c55e','#f97316','#ef4444','#3b82f6','#a855f7','#14b8a6','#f59e0b'];
+new Chart(document.getElementById('categoryChart'), {
+  type: 'doughnut',
+  data: {
+    labels: catData.length ? catData.map(c => c.category) : ['No data'],
+    datasets: [{
+      data: catData.length ? catData.map(c => c.total) : [1],
+      backgroundColor: COLORS,
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } } },
+    cutout: '68%'
+  }
+});
+</script>
+
+<% function getCatEmoji(cat) {
+  const map = { Food:'🍽️', Transport:'🚌', Stay:'🏨', Entertainment:'🎬', Shopping:'🛒', Medical:'💊', Utilities:'💡', Education:'📚', Other:'📦', Settlement:'✅' };
+  return map[cat] || '📦';
+} %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,79 @@
+<% const title = 'Friends'; const page = 'friends'; %>
+<%- include('../partials/header') %>
+
+<!-- Search to add friends -->
+<div class="card" style="margin-bottom:1.5rem;">
+  <div class="card-head"><h2><i class="fa-solid fa-user-plus"></i> Find & Add Friends</h2></div>
+  <form method="GET" action="/friends" class="search-form">
+    <div class="input-icon-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" name="q" value="<%= q %>" placeholder="Search by name or email…" autocomplete="off"/>
+    </div>
+    <button type="submit" class="btn-primary">Search</button>
+  </form>
+
+  <% if (searchResults.length > 0) { %>
+    <div class="search-results">
+      <% searchResults.forEach(u => { %>
+        <div class="search-result-item">
+          <div class="user-ava sm"><%= u.name[0].toUpperCase() %></div>
+          <div class="item-body">
+            <span class="item-title"><%= u.name %></span>
+            <span class="item-sub"><%= u.email %></span>
+          </div>
+          <form method="POST" action="/friends/add/<%= u.id %>">
+            <button type="submit" class="btn-sm btn-primary">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  <% } else if (q.length > 1) { %>
+    <p class="hint-text" style="margin-top:12px;">No users found for "<%= q %>". Ask them to register first.</p>
+  <% } %>
+</div>
+
+<!-- Friends list -->
+<div class="card">
+  <div class="card-head">
+    <h2>My Friends</h2>
+    <span class="badge"><%= friends.length %></span>
+  </div>
+
+  <% if (friends.length === 0) { %>
+    <div class="empty-state">
+      <i class="fa-solid fa-user-group"></i>
+      <p>No friends yet. Search above to add some!</p>
+    </div>
+  <% } else { %>
+    <div class="friends-grid">
+      <% friends.forEach(f => { %>
+        <div class="friend-card">
+          <div class="friend-card-top">
+            <div class="user-ava lg"><%= f.name[0].toUpperCase() %></div>
+            <form method="POST" action="/friends/remove/<%= f.id %>">
+              <button type="submit" class="btn-icon-sm" title="Remove friend" onclick="return confirm('Remove <%= f.name %>?')">
+                <i class="fa-solid fa-user-minus"></i>
+              </button>
+            </form>
+          </div>
+          <div class="friend-name"><%= f.name %></div>
+          <div class="friend-email"><%= f.email %></div>
+          <div class="friend-balance">
+            <% const net = f.they_owe - f.you_owe; %>
+            <% if (Math.abs(net) < 0.01) { %>
+              <span class="bal-chip bal-zero">Settled ✓</span>
+            <% } else if (net > 0) { %>
+              <span class="bal-chip bal-green">Owes you ₹<%= net.toFixed(2) %></span>
+            <% } else { %>
+              <span class="bal-chip bal-red">You owe ₹<%= Math.abs(net).toFixed(2) %></span>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

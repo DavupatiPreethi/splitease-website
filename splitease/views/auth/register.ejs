@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register – SplitEase</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-icon lg"><i class="fa-solid fa-bolt-lightning"></i></div>
+        <span class="brand-name xl">SplitEase</span>
+      </div>
+      <h2 class="auth-tagline">Start splitting<br/>smarter today.</h2>
+      <p class="auth-sub">Join thousands who use SplitEase to manage shared expenses effortlessly.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Free forever — no credit card</div>
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Unlimited expenses & groups</div>
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Secure & private</div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-card">
+        <h2 class="auth-card-title">Create account 🚀</h2>
+        <p class="auth-card-sub">It only takes 30 seconds</p>
+
+        <% if (error && error.length > 0) { %>
+          <div class="flash flash-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div>
+        <% } %>
+
+        <form action="/register" method="POST" class="auth-form">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" name="name" placeholder="Rahul Sharma" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <div class="input-icon-wrap">
+              <i class="fa-regular fa-envelope"></i>
+              <input type="email" name="email" placeholder="you@example.com" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" placeholder="At least 6 characters" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="confirm" placeholder="Repeat password" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn-auth">Create Account <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="/login">Sign in →</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

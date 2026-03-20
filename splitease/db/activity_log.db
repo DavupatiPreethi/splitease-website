@@ -1,0 +1,11 @@
+{"id":2,"user_id":2,"type":"register","message":"Joined SplitEase 🎉","created_at":"2026-03-20T14:08:52.098Z","_id":"17SylzrVTftrsPfa"}
+{"id":10,"user_id":3,"type":"settle","message":"Settled ₹666.67 with a friend","created_at":"2026-03-20T14:12:55.210Z","_id":"1dsCSldCyZTRVqR8"}
+{"id":1,"user_id":1,"type":"register","message":"Joined SplitEase 🎉","created_at":"2026-03-20T14:07:01.612Z","_id":"8Uf00wg0wg3v31Sp"}
+{"id":8,"user_id":1,"type":"group","message":"Created group \"1st trip\"","created_at":"2026-03-20T14:11:47.574Z","_id":"DlDH0ea2BdHEaSuI"}
+{"id":3,"user_id":2,"type":"friend","message":"Added Preethi as a friend","created_at":"2026-03-20T14:09:10.039Z","_id":"II33189qB4c48yHL"}
+{"id":9,"user_id":1,"type":"settle","message":"Settled ₹666.66 with a friend","created_at":"2026-03-20T14:12:13.800Z","_id":"Vg0mTQRWC0fJeIoa"}
+{"id":4,"user_id":3,"type":"register","message":"Joined SplitEase 🎉","created_at":"2026-03-20T14:09:33.914Z","_id":"g82grASLKt4D8g4e"}
+{"id":6,"user_id":3,"type":"friend","message":"Added harika as a friend","created_at":"2026-03-20T14:09:56.890Z","_id":"huXS8ehzzKBaL6mc"}
+{"id":5,"user_id":3,"type":"friend","message":"Added Preethi as a friend","created_at":"2026-03-20T14:09:48.939Z","_id":"huZzEAaQMaOMwhQK"}
+{"id":7,"user_id":1,"type":"expense","message":"Added expense \"dinner\" for ₹2000.00","created_at":"2026-03-20T14:10:59.948Z","_id":"iL2wUsptEwGEttC5"}
+{"id":11,"user_id":2,"type":"settle","message":"Settled ₹666.66 with a friend","created_at":"2026-03-20T14:28:43.788Z","_id":"srPRErHkKiV4E9lS"}

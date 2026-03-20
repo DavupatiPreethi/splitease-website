@@ -1,0 +1,59 @@
+<% const title = 'New Group'; const page = 'groups'; %>
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <div class="card form-card">
+    <div class="card-head">
+      <h2><i class="fa-solid fa-people-group"></i> Create a Group</h2>
+    </div>
+    <form action="/groups" method="POST" class="main-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Group Name <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="e.g. Goa Trip, Flat Mates…" required/>
+        </div>
+        <div class="form-group form-group-sm">
+          <label>Icon</label>
+          <select name="icon">
+            <option value="🏖️">🏖️ Trip</option>
+            <option value="🏠">🏠 Home</option>
+            <option value="🍽️">🍽️ Food</option>
+            <option value="🎉">🎉 Party</option>
+            <option value="💼">💼 Work</option>
+            <option value="🎓">🎓 College</option>
+            <option value="👥" selected>👥 General</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description (optional)</label>
+        <input type="text" name="description" placeholder="What's this group for?"/>
+      </div>
+
+      <div class="form-group">
+        <label>Add Friends to Group</label>
+        <% if (friends.length === 0) { %>
+          <p class="hint-text">You have no friends yet. <a href="/friends">Add some first.</a></p>
+        <% } else { %>
+          <div class="checkbox-grid">
+            <% friends.forEach(f => { %>
+              <label class="check-label">
+                <input type="checkbox" name="members" value="<%= f.id %>"/>
+                <div class="user-ava xs"><%= f.name[0].toUpperCase() %></div>
+                <%= f.name %>
+              </label>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="form-actions">
+        <a href="/groups" class="btn-secondary">Cancel</a>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Create Group</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – SplitEase</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-icon lg"><i class="fa-solid fa-bolt-lightning"></i></div>
+        <span class="brand-name xl">SplitEase</span>
+      </div>
+      <h2 class="auth-tagline">Split bills.<br/>Not friendships.</h2>
+      <p class="auth-sub">Track shared expenses, settle debts easily, and keep friendships intact.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Real-time expense tracking</div>
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Smart balance calculation</div>
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Group & friend management</div>
+        <div class="auth-feature"><i class="fa-solid fa-check-circle"></i> Settle up instantly</div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-card">
+        <h2 class="auth-card-title">Welcome back 👋</h2>
+        <p class="auth-card-sub">Sign in to your account</p>
+
+        <% if (error && error.length > 0) { %>
+          <div class="flash flash-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div>
+        <% } %>
+        <% if (success && success.length > 0) { %>
+          <div class="flash flash-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div>
+        <% } %>
+
+        <form action="/login" method="POST" class="auth-form">
+          <div class="form-group">
+            <label>Email address</label>
+            <div class="input-icon-wrap">
+              <i class="fa-regular fa-envelope"></i>
+              <input type="email" name="email" placeholder="you@example.com" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" placeholder="••••••••" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn-auth">Sign In <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+
+        <p class="auth-switch">Don't have an account? <a href="/register">Create one →</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

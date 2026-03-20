@@ -1,0 +1,78 @@
+<% const title = expense.description; const page = 'expenses'; %>
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <div class="card form-card">
+    <div class="card-head">
+      <div class="exp-detail-header">
+        <div class="cat-icon-lg"><%= getCatEmoji(expense.category) %></div>
+        <div>
+          <h2><%= expense.description %></h2>
+          <p class="card-sub"><%= expense.category %> · <%= expense.date %></p>
+        </div>
+      </div>
+      <form method="POST" action="/expenses/<%= expense.id %>/delete">
+        <button class="btn-danger" onclick="return confirm('Delete this expense?')">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </form>
+    </div>
+
+    <div class="exp-detail-grid">
+      <div class="exp-detail-item">
+        <span class="detail-label">Total Amount</span>
+        <span class="detail-value big">₹<%= expense.amount.toFixed(2) %></span>
+      </div>
+      <div class="exp-detail-item">
+        <span class="detail-label">Paid By</span>
+        <span class="detail-value"><%= expense.payer_name %></span>
+      </div>
+      <div class="exp-detail-item">
+        <span class="detail-label">Split Type</span>
+        <span class="detail-value"><%= expense.split_type %></span>
+      </div>
+      <% if (expense.group_name) { %>
+        <div class="exp-detail-item">
+          <span class="detail-label">Group</span>
+          <span class="detail-value"><%= expense.group_name %></span>
+        </div>
+      <% } %>
+      <% if (expense.notes) { %>
+        <div class="exp-detail-item">
+          <span class="detail-label">Notes</span>
+          <span class="detail-value"><%= expense.notes %></span>
+        </div>
+      <% } %>
+    </div>
+
+    <h3 style="margin:20px 0 12px; font-size:0.95rem; color:#6b7280;">Split Breakdown</h3>
+    <div class="list-items">
+      <% splits.forEach(s => { %>
+        <div class="list-item">
+          <div class="user-ava sm"><%= s.user_name[0].toUpperCase() %></div>
+          <div class="item-body">
+            <span class="item-title"><%= s.user_name %> <%= s.user_id == uid ? '<span class="you-badge">(you)</span>' : '' %></span>
+            <% if (s.user_id == expense.paid_by) { %>
+              <span class="item-sub text-blue">Paid the bill</span>
+            <% } else { %>
+              <span class="item-sub <%= s.paid ? 'text-green' : 'text-red' %>"><%= s.paid ? 'Settled ✓' : 'Pending' %></span>
+            <% } %>
+          </div>
+          <span class="item-amount">₹<%= s.share.toFixed(2) %></span>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="form-actions" style="margin-top:20px;">
+      <a href="/expenses" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+      <a href="/balances" class="btn-primary">Settle Up →</a>
+    </div>
+  </div>
+</div>
+
+<% function getCatEmoji(cat) {
+  const map = { Food:'🍽️', Transport:'🚌', Stay:'🏨', Entertainment:'🎬', Shopping:'🛒', Medical:'💊', Utilities:'💡', Education:'📚', Other:'📦', Settlement:'✅' };
+  return map[cat] || '📦';
+} %>
+
+<%- include('../partials/footer') %>

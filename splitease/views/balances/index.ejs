@@ -1,0 +1,149 @@
+<% const title = 'Balances'; const page = 'balances'; %>
+<%- include('../partials/header') %>
+
+<!-- Summary Cards -->
+<div class="balance-summary">
+  <div class="bal-sum-card bal-green">
+    <i class="fa-solid fa-circle-arrow-down"></i>
+    <div>
+      <span class="bal-sum-label">Total Owed to You</span>
+      <span class="bal-sum-value">₹<%= totalOwed.toFixed(2) %></span>
+    </div>
+  </div>
+  <div class="bal-sum-card bal-red">
+    <i class="fa-solid fa-circle-arrow-up"></i>
+    <div>
+      <span class="bal-sum-label">Total You Owe</span>
+      <span class="bal-sum-value">₹<%= totalIOwe.toFixed(2) %></span>
+    </div>
+  </div>
+  <div class="bal-sum-card <%= totalOwed - totalIOwe >= 0 ? 'bal-green' : 'bal-red' %>">
+    <i class="fa-solid fa-scale-balanced"></i>
+    <div>
+      <span class="bal-sum-label">Net Balance</span>
+      <span class="bal-sum-value">
+        <%= totalOwed - totalIOwe >= 0 ? '+' : '' %>₹<%= (totalOwed - totalIOwe).toFixed(2) %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="balance-layout">
+
+  <!-- Outstanding Balances -->
+  <div class="card" style="flex:1.5">
+    <div class="card-head">
+      <h2>Outstanding Balances</h2>
+    </div>
+    <% if (balances.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-handshake"></i>
+        <p>All settled up! 🎉</p>
+      </div>
+    <% } else { %>
+      <div class="list-items">
+        <% balances.forEach(b => { %>
+          <div class="list-item balance-item">
+            <div class="user-ava sm"><%= b.name[0].toUpperCase() %></div>
+            <div class="item-body">
+              <span class="item-title"><%= b.name %></span>
+              <span class="item-sub <%= b.net > 0 ? 'text-green' : 'text-red' %>">
+                <% if (b.net > 0) { %>
+                  <i class="fa-solid fa-arrow-down"></i> Owes you ₹<%= b.net.toFixed(2) %>
+                <% } else { %>
+                  <i class="fa-solid fa-arrow-up"></i> You owe ₹<%= Math.abs(b.net).toFixed(2) %>
+                <% } %>
+              </span>
+            </div>
+            <% if (b.net < 0) { %>
+              <button class="btn-settle" onclick="openSettle('<%= b.id %>', '<%= b.name %>', '<%= Math.abs(b.net).toFixed(2) %>')">
+                <i class="fa-solid fa-check"></i> Settle Up
+              </button>
+            <% } else { %>
+              <span class="collect-chip">
+                <i class="fa-solid fa-clock"></i> Pending
+              </span>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Settlement History -->
+  <div class="card" style="flex:1">
+    <div class="card-head">
+      <h2>Settlement History</h2>
+    </div>
+    <% if (history.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <p>No settlements yet.</p>
+      </div>
+    <% } else { %>
+      <div class="list-items">
+        <% history.forEach(h => { %>
+          <div class="list-item">
+            <div class="settle-hist-icon">✅</div>
+            <div class="item-body">
+              <span class="item-title"><%= h.from_name %> → <%= h.to_name %></span>
+              <span class="item-sub">
+                <%= new Date(h.settled_at).toLocaleDateString('en-IN') %>
+              </span>
+            </div>
+            <span class="item-amount text-green">₹<%= h.amount.toFixed(2) %></span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+</div>
+
+<!-- Settle Up Modal -->
+<div class="modal-overlay" id="settleModal" onclick="closeSettle(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-icon">
+        <i class="fa-solid fa-handshake"></i>
+      </div>
+      <div>
+        <h3 class="modal-title">Settle Up</h3>
+        <p class="modal-sub" id="settle-subtitle">Record a payment</p>
+      </div>
+    </div>
+    <form action="/balances/settle" method="POST" class="main-form">
+      <input type="hidden" name="friend_id" id="settle-friend-id"/>
+      <div class="form-group">
+        <label>Amount (₹)</label>
+        <input type="number" name="amount" id="settle-amount" step="0.01" min="0.01" required/>
+      </div>
+      <div class="form-group">
+        <label>Note (optional)</label>
+        <input type="text" name="note" placeholder="e.g. Paid via GPay, UPI…"/>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="closeSettle()">Cancel</button>
+        <button type="submit" class="btn-primary">
+          <i class="fa-solid fa-check"></i> Confirm Payment
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openSettle(friendId, name, amount) {
+  document.getElementById('settle-friend-id').value = friendId;
+  document.getElementById('settle-amount').value    = amount;
+  document.getElementById('settle-subtitle').textContent = 'Paying ' + name + ' ₹' + amount;
+  document.getElementById('settleModal').classList.add('active');
+}
+function closeSettle(e) {
+  if (!e || e.target.id === 'settleModal') {
+    document.getElementById('settleModal').classList.remove('active');
+  }
+}
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,82 @@
+<% const title = group.name; const page = 'groups'; %>
+<%- include('../partials/header') %>
+
+<div class="group-header-bar">
+  <div class="group-header-left">
+    <div class="group-icon-lg"><%= group.icon %></div>
+    <div>
+      <h2 class="group-title"><%= group.name %></h2>
+      <% if (group.description) { %><p class="group-subtitle"><%= group.description %></p><% } %>
+    </div>
+  </div>
+  <div class="group-header-actions">
+    <a href="/expenses/new?group=<%= group.id %>" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Expense</a>
+    <% if (group.created_by === uid) { %>
+      <form method="POST" action="/groups/<%= group.id %>/delete" style="display:inline">
+        <button class="btn-danger" onclick="return confirm('Delete this group?')">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<div class="group-layout">
+  <!-- Expenses -->
+  <div class="card" style="flex:2">
+    <div class="card-head">
+      <h2>Expenses</h2>
+      <span class="badge"><%= expenses.length %></span>
+    </div>
+    <% if (expenses.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-receipt"></i>
+        <p>No expenses yet in this group.</p>
+      </div>
+    <% } else { %>
+      <div class="list-items">
+        <% expenses.forEach(e => { %>
+          <div class="list-item">
+            <div class="item-icon cat-icon"><%= getCatEmoji(e.category) %></div>
+            <div class="item-body">
+              <span class="item-title"><%= e.description %></span>
+              <span class="item-sub">Paid by <%= e.payer_name %> · <%= e.date %></span>
+            </div>
+            <div class="item-right">
+              <span class="item-amount">₹<%= e.amount.toFixed(2) %></span>
+              <form method="POST" action="/expenses/<%= e.id %>/delete" style="display:inline">
+                <button class="btn-icon-xs" title="Delete"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Members -->
+  <div class="card" style="flex:1">
+    <div class="card-head">
+      <h2>Members</h2>
+      <span class="badge"><%= members.length %></span>
+    </div>
+    <div class="list-items">
+      <% members.forEach(m => { %>
+        <div class="list-item">
+          <div class="user-ava sm"><%= m.name[0].toUpperCase() %></div>
+          <div class="item-body">
+            <span class="item-title"><%= m.name %> <%= m.id === uid ? '<span class="you-badge">(you)</span>' : '' %></span>
+            <span class="item-sub"><%= m.email %></span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<% function getCatEmoji(cat) {
+  const map = { Food:'🍽️', Transport:'🚌', Stay:'🏨', Entertainment:'🎬', Shopping:'🛒', Medical:'💊', Utilities:'💡', Education:'📚', Other:'📦', Settlement:'✅' };
+  return map[cat] || '📦';
+} %>
+
+<%- include('../partials/footer') %>

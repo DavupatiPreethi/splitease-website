@@ -1,0 +1,79 @@
+<% const title = 'Expenses'; const page = 'expenses'; %>
+<%- include('../partials/header') %>
+
+<!-- Filters -->
+<div class="card filters-card">
+  <form method="GET" action="/expenses" class="filters-form">
+    <div class="input-icon-wrap" style="flex:2">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" name="q" value="<%= filters.q || '' %>" placeholder="Search expenses…"/>
+    </div>
+    <select name="group">
+      <option value="">All Groups</option>
+      <% groups.forEach(g => { %>
+        <option value="<%= g.id %>" <%= filters.group == g.id ? 'selected' : '' %>><%= g.name %></option>
+      <% }) %>
+    </select>
+    <select name="category">
+      <option value="">All Categories</option>
+      <% categories.forEach(c => { %>
+        <option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= c %></option>
+      <% }) %>
+    </select>
+    <button type="submit" class="btn-primary">Filter</button>
+    <a href="/expenses" class="btn-secondary">Clear</a>
+  </form>
+</div>
+
+<div class="page-top-bar">
+  <p class="results-count"><%= expenses.length %> expense<%= expenses.length !== 1 ? 's' : '' %> found</p>
+  <a href="/expenses/new" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Expense</a>
+</div>
+
+<div class="card">
+  <% if (expenses.length === 0) { %>
+    <div class="empty-state">
+      <i class="fa-solid fa-receipt"></i>
+      <p>No expenses found. <a href="/expenses/new">Add one!</a></p>
+    </div>
+  <% } else { %>
+    <div class="expense-table">
+      <div class="expense-table-head">
+        <span>Description</span>
+        <span>Category</span>
+        <span>Paid By</span>
+        <span>Split With</span>
+        <span>Date</span>
+        <span>Amount</span>
+        <span></span>
+      </div>
+      <% expenses.forEach(e => { %>
+        <div class="expense-table-row">
+          <span class="exp-desc">
+            <div class="cat-icon-sm"><%= getCatEmoji(e.category) %></div>
+            <%= e.description %>
+            <% if (e.group_name) { %><span class="group-tag"><%= e.group_name %></span><% } %>
+          </span>
+          <span><span class="cat-badge"><%= e.category %></span></span>
+          <span><%= e.payer_name %></span>
+          <span class="split-with-cell"><%= e.split_with || '—' %></span>
+          <span class="date-cell"><%= e.date %></span>
+          <span class="amount-cell">₹<%= e.amount.toFixed(2) %></span>
+          <span class="action-cell">
+            <a href="/expenses/<%= e.id %>" class="btn-icon-xs" title="View"><i class="fa-solid fa-eye"></i></a>
+            <form method="POST" action="/expenses/<%= e.id %>/delete" style="display:inline">
+              <button class="btn-icon-xs danger" title="Delete" onclick="return confirm('Delete this expense?')"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </span>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<% function getCatEmoji(cat) {
+  const map = { Food:'🍽️', Transport:'🚌', Stay:'🏨', Entertainment:'🎬', Shopping:'🛒', Medical:'💊', Utilities:'💡', Education:'📚', Other:'📦', Settlement:'✅' };
+  return map[cat] || '📦';
+} %>
+
+<%- include('../partials/footer') %>
